@@ -1,0 +1,3 @@
+## 2025-05-15 - [Font Weight Auditing and Ghost Script Removal]
+**Learning:** In large monolithic files like `index.html`, font weight usage can be easily missed if not auditing for both explicit declarations and default inheritance (e.g. weight 400). Trimming Google Fonts provides a measurable boost by reducing the number of font-face requests. Also, removing "ghost" scripts (referenced in HTML but missing from the repo) prevents unnecessary 404 network errors and console clutter.
+**Action:** Use comprehensive `grep` patterns to identify all font weights and verify file existence for all script/asset references before concluding they are safe to remove.

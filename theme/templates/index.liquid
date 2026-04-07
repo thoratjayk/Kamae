@@ -1,0 +1,160 @@
+{% section 'hero-banner' %}
+
+<!-- ==========================================
+     WHY WE EXIST
+========================================== -->
+<section id="why">
+  <div class="container why-grid">
+    <div class="why-left">
+      <div class="why-headline">
+        <span class="display-md">WHY WE</span>
+        <span class="display-md accent">EXIST</span>
+      </div>
+      <p class="why-body">
+        Wellness became a chore. A 5 AM cold plunge, a bitter green juice, a clinical spreadsheet of "optimization." Somewhere along the way, we forgot that the point of being alive is to actually <em style="color:var(--on-surface)">feel something good.</em>
+      </p>
+      <blockquote class="why-quote">
+        "We are the antidote to the optimized life. We are the pulse of the late night. We are the permission you didn't know you needed."
+      </blockquote>
+      <p class="why-body">
+        Vibe Check was born in a basement, fueled by caffeine and a refusal to settle for "fine." We normalize self-care by making it rebellious, messy, and loud.
+      </p>
+    </div>
+    <div class="why-cards">
+      <div class="why-card reveal">
+        <div class="why-card-icon">🚫</div>
+        <h3 class="why-card-title">No Meditative Silence Here.</h3>
+        <p class="why-card-body">We don't do "quiet." We do the kind of self-care that makes your neighbors wonder what you're celebrating.</p>
+        <div class="feature-badges">
+          <span class="sticker sticker-outline">Anti-boring</span>
+          <span class="sticker sticker-outline">No BS</span>
+        </div>
+      </div>
+      <div class="why-card reveal reveal-delay-1" style="background:var(--primary)">
+        <div class="why-card-icon" style="background:rgba(0,0,0,0.15)">🖤</div>
+        <h3 class="why-card-title" style="color:#0e0e0e">100% Raw Passion</h3>
+        <p class="why-card-body" style="color:rgba(14,14,14,0.7)">Every formula, every drop, made with reckless care by people who actually use it.</p>
+        <div class="feature-badges">
+          <span class="sticker" style="background:rgba(0,0,0,0.15);color:#0e0e0e">Clean</span>
+          <span class="sticker" style="background:rgba(0,0,0,0.15);color:#0e0e0e">Honest</span>
+        </div>
+      </div>
+      <div class="why-card reveal reveal-delay-2" style="background:var(--tertiary)">
+        <div class="why-card-icon" style="background:rgba(0,0,0,0.1)">➕</div>
+        <h3 class="why-card-title" style="color:#0e0e0e">0% Boring Stats</h3>
+        <p class="why-card-body" style="color:rgba(14,14,14,0.65)">We skip the double-blind placebo talk. You'll know it's working because you'll feel it.</p>
+        <div class="feature-badges">
+          <span class="sticker" style="background:rgba(0,0,0,0.12);color:#0e0e0e">Feel first</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     PRODUCTS
+========================================== -->
+<section class="products-section" id="products">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="sticker sticker-pink sticker-rotate" style="margin-bottom:1rem;display:inline-block">New Drop</span>
+        <h2 class="display-md reveal">THE <span style="color:var(--secondary)">PULSE</span></h2>
+      </div>
+      <a href="/collections/all" class="btn btn-secondary">View All</a>
+    </div>
+    <div class="products-grid" id="productsGrid">
+      {% render 'product-card', id: 'p1', title: 'Night Shift Formula', price: 3800, original_price: 4800, emoji: '💊', badge: 'Bestseller', badge_class: 'sticker-lime sticker-rotate' %}
+      {% render 'product-card', id: 'p2', title: 'Midnight Glow Serum', price: 5600, emoji: '🌙', badge: 'New', badge_class: 'sticker-cyan sticker-rotate-r' %}
+      {% render 'product-card', id: 'p3', title: 'Electric Pulse Drops', price: 4200, emoji: '⚡' %}
+      {% render 'product-card', id: 'p4', title: 'The Rebellion Set', price: 9800, original_price: 12000, emoji: '🔥', badge: 'Hot', badge_class: 'sticker-pink sticker-rotate' %}
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     TEAM
+========================================== -->
+<section class="team-section" id="team">
+  <div class="container">
+    <div class="team-headline-wrap">
+      <div>
+        <h2 class="display-md reveal">THE VIBE<span class="accent">ARCHITECTS</span></h2>
+      </div>
+      <div class="team-sticker-wrap reveal reveal-delay-1">
+        <span class="sticker sticker-pink sticker-rotate-r">Wanted: Truth Seekers</span>
+      </div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-img">
+          <div class="team-img-placeholder">👩</div>
+          <span class="team-card-badge"><span class="sticker sticker-pink" style="font-size:0.6rem">CEO</span></span>
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">Jax "Vibe" Rivera</h3>
+          <p class="team-role">Chief Pleasure Officer</p>
+          <p class="team-bio">Once tried to meditate and ended up starting a punk band instead. Jax ensures nothing we make is ever "polite."</p>
+        </div>
+      </div>
+      <div class="team-card reveal reveal-delay-1">
+        <div class="team-img">
+          <div class="team-img-placeholder">🧔</div>
+          <span class="team-card-badge"><span class="sticker sticker-cyan" style="font-size:0.6rem">Design</span></span>
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">Leo Thorne</h3>
+          <p class="team-role">Head of Disruption</p>
+          <p class="team-bio">Leo doesn't design grids, he breaks them. He believes a color palette should make your teeth ache.</p>
+        </div>
+      </div>
+      <div class="team-card reveal reveal-delay-2">
+        <div class="team-img">
+          <div class="team-img-placeholder">💜</div>
+          <span class="team-card-badge"><span class="sticker sticker-lime" style="font-size:0.6rem">Pulse</span></span>
+          <span class="team-card-sticker"><span class="sticker sticker-cyan" style="font-size:0.6rem">Vibe ✓</span></span>
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">Mika Zen</h3>
+          <p class="team-role">Pulse Monitor</p>
+          <p class="team-bio">Mika speaks fluent subculture and ensures we stay connected to the streets, not the boardroom.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     CTA
+========================================== -->
+<div class="cta-section reveal" id="sets">
+  <div class="cta-content">
+    <h2 class="cta-headline">JOIN THE<br>REBELLION</h2>
+    <a href="#products" class="btn btn-dark">
+      Explore the Sets
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="cta-tags">
+      <span class="cta-tag">All In</span>
+      <span class="cta-tag">No Rules</span>
+      <span class="cta-tag">Just Vibes</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================
+     NEWSLETTER
+========================================== -->
+<div class="newsletter-section" id="pulse">
+  <div class="newsletter-wrap reveal">
+    <div class="newsletter-content">
+      <span class="sticker sticker-lime sticker-rotate" style="margin-bottom:1rem;display:inline-block">Get the Juice ⚡</span>
+      <h3 class="newsletter-headline">Stay in the Loop</h3>
+      <p class="newsletter-sub">New drops, pulse updates, and things we probably shouldn't say publicly.</p>
+    </div>
+    <div class="newsletter-form">
+      <input type="email" class="newsletter-input" placeholder="your@email.com" id="newsletterEmail" />
+      <button class="btn btn-primary" onclick="subscribeNewsletter()">Subscribe</button>
+    </div>
+  </div>
+</div>

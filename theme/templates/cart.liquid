@@ -1,0 +1,15 @@
+<div class="container">
+  <h1>Your Cart</h1>
+  {% if cart.item_count > 0 %}
+    <form action="/cart" method="post" novalidate>
+      {% for item in cart.items %}
+        <div class="cart-item">
+          {{ item.product.title }} - {{ item.price | money }}
+        </div>
+      {% endfor %}
+      <input type="submit" name="checkout" value="Checkout">
+    </form>
+  {% else %}
+    <p>Your cart is empty.</p>
+  {% endif %}
+</div>

@@ -1,0 +1,17 @@
+{% comment %}
+    Renders a list of product's price (regular, sale)
+
+    Accepts:
+    - price: {Number} Product price in cents (required)
+    - original_price: {Number} Optional original price in cents for sale items
+
+    Usage:
+    {% render 'price', price: 3800, original_price: 4800 %}
+{% endcomment %}
+
+<p class="product-price">
+  {%- if original_price > price -%}
+    <span class="original">{{ original_price | money }}</span>
+  {%- endif -%}
+  {{ price | money }}
+</p>

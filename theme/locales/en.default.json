@@ -1,0 +1,36 @@
+{
+  "general": {
+    "cart": {
+      "title": "Your Bag",
+      "empty": "Your bag is empty",
+      "add_to_cart": "Add to cart",
+      "checkout": "Checkout — Pay Now",
+      "total": "Total",
+      "added_to_cart": "Added to cart"
+    },
+    "newsletter": {
+      "title": "Stay in the Loop",
+      "sub": "New drops, pulse updates, and things we probably shouldn't say publicly.",
+      "placeholder": "your@email.com",
+      "button": "Subscribe",
+      "badge": "Get the Juice ⚡",
+      "success": "🎉 You're in the rebellion!"
+    },
+    "navigation": {
+      "shop": "Shop",
+      "sets": "Sets",
+      "pulse": "The Pulse",
+      "why": "Our Why"
+    }
+  },
+  "products": {
+    "product": {
+      "price": {
+        "from_price_html": "From {{ price }}",
+        "regular_price": "Regular price",
+        "sale_price": "Sale price",
+        "unit_price": "Unit price"
+      }
+    }
+  }
+}

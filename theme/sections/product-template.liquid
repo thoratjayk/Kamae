@@ -1,0 +1,14 @@
+<section class="product-template">
+  <div class="container">
+    <h1>{{ product.title }}</h1>
+    <div class="product-price">{{ product.price | money }}</div>
+    {{ product.description }}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Template",
+  "settings": []
+}
+{% endschema %}

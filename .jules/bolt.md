@@ -1,0 +1,3 @@
+## 2024-05-24 - [Custom Cursor Optimization & Event Delegation]
+**Learning:** Redundant style calculations in separate `requestAnimationFrame` or `mousemove` listeners can lead to layout thrashing and increased CPU usage. Additionally, attaching individual event listeners to many interactive elements (like product cards) is less memory-efficient and fails for dynamically added content.
+**Action:** Consolidate DOM updates into a single `requestAnimationFrame` loop, use `translate3d` to leverage GPU acceleration, and implement event delegation on a common parent (like `document`) for hover states to improve both performance and reliability.

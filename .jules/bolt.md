@@ -1,0 +1,3 @@
+## 2026-04-09 - Cursor Hover Event Delegation
+**Learning:** Attaching individual event listeners to every interactive element (links, buttons, etc.) for UI effects like custom cursors is inefficient in terms of memory and initialization time. More importantly, it fails for dynamically loaded content (e.g., product grids or cart items) unless manually re-attached after every DOM update.
+**Action:** Use event delegation on the `document` level for global UI effects. This reduces the number of listeners from N to 1 and ensures support for all current and future elements without extra logic. When using `mouseover`/`mouseout` for delegation, include `relatedTarget` and `contains()` checks to prevent flickering when moving between an interactive element and its children.

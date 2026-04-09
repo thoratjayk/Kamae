@@ -5,7 +5,20 @@
   document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
   function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+  /* Optimized: Use event delegation for cursor hover to improve memory and support dynamic elements.
+     Using mouseenter/mouseleave logic with delegation to avoid flickering when moving between children. */
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, [onclick]');
+    if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) {
+      ring.classList.add('hovered');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, [onclick]');
+    if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) {
+      ring.classList.remove('hovered');
+    }
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

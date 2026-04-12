@@ -1,0 +1,3 @@
+## 2025-05-14 - Optimized Custom Cursor Performance
+**Learning:** Consolidating DOM updates for multiple animated elements (like a cursor dot and ring) into a single `requestAnimationFrame` loop significantly reduces layout thrashing and ensures they stay in sync with the display refresh rate. Removing conflicting CSS `transition: transform` is essential when the property is being updated via JavaScript.
+**Action:** Always use a single rAF loop for multiple related UI animations and ensure no CSS transitions are active on the properties being animated by JS. Use event delegation for hover states on interactive elements to improve memory efficiency.

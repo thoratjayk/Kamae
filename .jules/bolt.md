@@ -1,0 +1,3 @@
+## 2025-05-14 - Custom Cursor Optimization
+**Learning:** High-frequency event listeners like `mousemove` that directly update the DOM can cause layout thrashing and stuttering, especially when combined with CSS transitions on the same properties. Consolidating all cursor-related DOM updates into a single `requestAnimationFrame` loop and using `translate3d` for hardware acceleration significantly improves perceived performance and smoothness.
+**Action:** Always prefer a single rAF loop for high-frequency UI updates and use event delegation for hover states to handle dynamic content efficiently.

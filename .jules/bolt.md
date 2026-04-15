@@ -1,0 +1,3 @@
+## 2026-04-15 - Optimizing Custom Cursor and Event Delegation
+**Learning:** High-frequency DOM updates (like `mousemove`) should be consolidated into a single `requestAnimationFrame` loop. Direct style updates in `mousemove` can exceed the display's refresh rate and cause redundant work. Additionally, CSS `transition: transform` conflicts with JS-driven animation loops, causing rendering jank. Event delegation on `document` is significantly more memory-efficient and dynamic than adding listeners to every interactive element.
+**Action:** Always move per-frame UI updates to rAF, use `translate3d` for GPU acceleration, remove conflicting CSS transitions, and prefer event delegation for global hover/interaction effects.

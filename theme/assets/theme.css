@@ -57,7 +57,8 @@
       background: var(--primary);
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      transition: transform 0.1s;
+      /* Remove transition: transform to prevent jank during JS-driven animations */
+      transition: width 0.3s, height 0.3s, background-color 0.3s;
     }
     .cursor-ring {
       position: fixed; top: 0; left: 0; z-index: 9998;
@@ -66,7 +67,8 @@
       border-radius: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      transition: transform 0.18s ease, width 0.3s, height 0.3s, border-color 0.3s;
+      /* Remove transition: transform to prevent jank during JS-driven animations */
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
       mix-blend-mode: difference;
     }
     .cursor-ring.hovered {

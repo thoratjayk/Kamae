@@ -1,0 +1,3 @@
+## 2026-04-17 - Smooth Custom Cursor Optimization
+**Learning:** Custom cursors updating on every `mousemove` event and having CSS `transition: transform` active simultaneously causes significant layout thrashing and stuttering (jank). Combining `requestAnimationFrame` for throttled DOM updates, `translate3d` for GPU acceleration, and removing CSS transitions on the animated property results in much smoother 60fps movement.
+**Action:** Always move high-frequency DOM updates (cursor, parallax, scroll effects) to a rAF loop, use 3D transforms, and ensure no CSS transitions conflict with the JS-driven properties.

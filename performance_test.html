@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Check Performance Test</title>
+    <link rel="stylesheet" href="/app/theme/assets/theme.css">
+    <style>
+        body { background: #0e0e0e; color: #f0f0f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
+        .btn { padding: 1rem 2rem; background: #ff89ab; color: #0e0e0e; border-radius: 999px; font-weight: bold; cursor: none; }
+    </style>
+</head>
+<body>
+    <div id="cursorDot" class="cursor-dot cursor"></div>
+    <div id="cursorRing" class="cursor-ring"></div>
+
+    <button id="testButton" class="btn">Hover Me</button>
+    <a href="#" id="testLink" class="btn">Link Hover</a>
+
+    <!-- Mock elements for theme.js initialization -->
+    <div id="mainNav"></div>
+    <div id="cartBadge"></div>
+    <div id="cartTotal"></div>
+    <div id="cartEmpty"></div>
+    <div id="cartFooter"></div>
+    <div id="cartItems"></div>
+    <div id="toast"><div id="toastMsg"></div></div>
+
+    <script src="/app/theme/assets/theme.js"></script>
+</body>
+</html>

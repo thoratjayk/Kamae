@@ -1,0 +1,3 @@
+## 2026-04-21 - [Optimizing Custom Cursor and Event Handling]
+**Learning:** Consolidating DOM updates for high-frequency animated elements (like custom cursors) into a single `requestAnimationFrame` loop and using `translate3d` significantly reduces layout thrashing and leverages GPU acceleration. Additionally, replacing per-element event listeners with document-level event delegation (using `target.closest()`) reduces memory overhead and initialization time, especially for dynamic content. Removing CSS transitions on properties managed by JS prevents interpolation conflicts and "jank".
+**Action:** Always prefer document-level event delegation for hover states and consolidate rAF loops for global UI animations.

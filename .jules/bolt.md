@@ -1,0 +1,3 @@
+## 2025-05-15 - [Cursor Animation Junk & Event Overload]
+**Learning:** Combining CSS `transition: transform` with JavaScript `requestAnimationFrame` updates for the same property causes significant rendering stutter (jank). Additionally, binding individual event listeners to hundreds of elements (like products or links) increases memory overhead and requires re-binding for dynamic content.
+**Action:** Always remove CSS transitions from properties managed by JS animation loops. Use `translate3d` to force GPU acceleration. Implement event delegation on the `document` level using `event.target.closest()` to handle hover states efficiently and support dynamic DOM updates without extra overhead.

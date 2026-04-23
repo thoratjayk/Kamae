@@ -2,10 +2,42 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
-  animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Optimized high-frequency event listener: only update coordinates
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  // Consolidated animation loop for both dot and ring to prevent layout thrashing
+  function animateCursor() {
+    // Smooth trailing effect for the ring
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+
+    // Use translate3d for hardware acceleration
+    dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate3d(-50%, -50%, 0)`;
+    ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate3d(-50%, -50%, 0)`;
+
+    requestAnimationFrame(animateCursor);
+  }
+  requestAnimationFrame(animateCursor);
+
+  // Performance win: Event delegation for hover states
+  // Instead of thousands of listeners, we use one listener on document
+  // Flicker-free implementation: only toggle class when the target container changes
+  let currentHoverTarget = null;
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, [onclick], .product-card');
+    if (target !== currentHoverTarget) {
+      currentHoverTarget = target;
+      if (currentHoverTarget) {
+        ring.classList.add('hovered');
+      } else {
+        ring.classList.remove('hovered');
+      }
+    }
+  }, { passive: true });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

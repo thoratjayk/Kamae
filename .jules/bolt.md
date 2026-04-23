@@ -1,0 +1,3 @@
+## 2025-05-14 - Optimized Custom Cursor Performance
+**Learning:** High-frequency events like `mousemove` should not directly update the DOM. Consolidating DOM updates into a single `requestAnimationFrame` loop and using `translate3d` for GPU acceleration significantly reduces layout thrashing. Also, event delegation on `document` for hover states is much more efficient than adding individual listeners to every interactive element, especially when content is dynamic.
+**Action:** Always defer high-frequency DOM updates to `requestAnimationFrame` and use event delegation for global UI behaviors like custom cursors or tooltips.

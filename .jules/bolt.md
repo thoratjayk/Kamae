@@ -1,0 +1,3 @@
+## 2025-05-14 - [Cursor Performance Optimization]
+**Learning:** CSS `transition: transform` conflicts with JavaScript `requestAnimationFrame` updates for high-frequency animations like custom cursors, causing rendering lag and increased CPU work. Hardware acceleration via `translate3d` and `will-change: transform` combined with event delegation for hover states provides a much smoother, lower-overhead experience.
+**Action:** Always remove CSS transitions from elements being moved via rAF and use `translate3d` with `will-change: transform`. Use event delegation for high-volume interactive elements to minimize listener overhead.

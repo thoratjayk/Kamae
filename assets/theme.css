@@ -56,18 +56,24 @@
       width: 8px; height: 8px;
       background: var(--primary);
       border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s;
+      /* Use translate3d for GPU acceleration */
+      transform: translate3d(-50%, -50%, 0);
+      /* Promote to compositor layer for smoother animation */
+      will-change: transform;
     }
     .cursor-ring {
       position: fixed; top: 0; left: 0; z-index: 9998;
       width: 36px; height: 36px;
       border: 1.5px solid var(--primary);
       border-radius: 50%;
-      transform: translate(-50%, -50%);
+      /* Use translate3d for GPU acceleration */
+      transform: translate3d(-50%, -50%, 0);
       pointer-events: none;
-      transition: transform 0.18s ease, width 0.3s, height 0.3s, border-color 0.3s;
+      /* Remove transition: transform to avoid conflicts with JavaScript animation loop */
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
       mix-blend-mode: difference;
+      /* Promote to compositor layer for smoother animation */
+      will-change: transform;
     }
     .cursor-ring.hovered {
       width: 56px; height: 56px;

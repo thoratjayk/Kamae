@@ -1,0 +1,3 @@
+## 2026-04-25 - Cursor Animation Optimization
+**Learning:** Consolidated DOM updates for animated elements (like custom cursors) into a single `requestAnimationFrame` loop, combined with `translate3d` and `will-change: transform`, significantly reduces layout thrashing and ensures smooth, GPU-accelerated rendering. Document-level event delegation for hover states is more efficient than individual listeners and handles dynamic content automatically.
+**Action:** Always use a single rAF loop for multiple related DOM animations and prioritize event delegation for interactive elements. Remove CSS transitions on properties being animated by JS to avoid rendering conflicts.

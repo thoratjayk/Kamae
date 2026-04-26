@@ -1,11 +1,39 @@
   /* ── CURSOR ── */
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let mx = 0, my = 0, dotX = 0, dotY = 0, ringX = 0, ringY = 0;
+
+  // Use passive mousemove to avoid blocking the main thread
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  // Consolidated rAF loop for smooth cursor animation
+  function animateCursor() {
+    // Optimized: Update both dot and ring in a single loop using translate3d for GPU acceleration
+    dotX += (mx - dotX) * 0.45;
+    dotY += (my - dotY) * 0.45;
+    ringX += (mx - ringX) * 0.15;
+    ringY += (my - ringY) * 0.15;
+
+    dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Hardware-accelerated hover state using event delegation (more efficient than individual listeners)
+  let currentHoverTarget = null;
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target !== currentHoverTarget) {
+      if (target) ring.classList.add('hovered');
+      else ring.classList.remove('hovered');
+      currentHoverTarget = target;
+    }
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

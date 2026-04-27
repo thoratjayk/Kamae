@@ -1,0 +1,3 @@
+## 2026-04-27 - [Consolidated Animation Loop and DOM Batching]
+**Learning:** High-frequency events like `mousemove` can cause significant main-thread overhead if they trigger direct DOM updates. Consolidating all DOM updates into a single `requestAnimationFrame` loop and using `translate3d` leverages GPU acceleration and prevents layout thrashing. Additionally, using `DocumentFragment` for batching multiple element injections into the DOM is critical for maintaining performance during dynamic content loads like product grids.
+**Action:** Always move high-frequency DOM updates to a rAF loop, use `translate3d`, and use `DocumentFragment` when appending multiple elements in a loop.

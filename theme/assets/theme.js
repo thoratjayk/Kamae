@@ -2,10 +2,27 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  // Use passive listener to avoid blocking main thread during high-frequency mouse moves
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  // Consolidated requestAnimationFrame loop for both elements with translate3d for GPU acceleration
+  function animateCursor() {
+    // Optimized dot positioning
+    dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+    // Smooth ring positioning with easing
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+  // Efficient event delegation for hover states to avoid attaching hundreds of listeners
+  let currentHoverTarget = null;
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, [onclick], .product-add-btn');
+    if (target !== currentHoverTarget) {
+      currentHoverTarget = target;
+      ring.classList.toggle('hovered', !!target);
+    }
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');
@@ -107,6 +124,8 @@
       if (!products || !products.length) return;
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
+      // Use DocumentFragment to batch DOM updates and minimize layout thrashing
+      const fragment = document.createDocumentFragment();
       products.forEach((p, i) => {
         const img = p.images?.[0]?.src || '';
         // Mock prices from API are likely in dollars, convert to cents for consistency
@@ -126,8 +145,9 @@
           <button class="product-add-btn" onclick="addToCart({id:'${variantId}',variantId:'${variantId}',name:'${p.title.replace(/'/g,"\\'")}',price:${priceInCents},emoji:'🛍️'})" aria-label="Add to cart">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#0e0e0e" stroke-width="2" stroke-linecap="round"/></svg>
           </button>`;
-        grid.appendChild(card);
+        fragment.appendChild(card);
         observer.observe(card);
       });
+      grid.appendChild(fragment);
     });
   }

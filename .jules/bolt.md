@@ -1,0 +1,3 @@
+## 2025-05-15 - Consolidate Animation Loops and Use Event Delegation
+**Learning:** High-frequency event listeners like `mousemove` and individual hover listeners on many elements can lead to main-thread congestion and layout thrashing. Consolidating DOM updates into a single `requestAnimationFrame` loop and using document-level event delegation significantly improves performance. Removing conflicting CSS transitions is also crucial for smooth JS-driven animations.
+**Action:** Always prefer rAF for high-frequency DOM updates and use event delegation for hover states on dynamic or numerous elements. Use `translate3d` and `will-change: transform` for GPU acceleration.

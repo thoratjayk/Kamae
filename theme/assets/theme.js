@@ -1,11 +1,40 @@
   /* ── CURSOR ── */
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let mx = 0, my = 0, rx = 0, ry = 0, dx = 0, dy = 0;
+
+  // Use passive listener for better scroll/touch performance
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  function animateCursor() {
+    // Smooth trailing for the ring
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    // Faster following for the dot
+    dx += (mx - dx) * 0.45;
+    dy += (my - dy) * 0.45;
+
+    // Use translate3d to trigger GPU acceleration and avoid layout thrashing
+    dot.style.transform = `translate3d(${dx}px, ${dy}px, 0) translate(-50%, -50%)`;
+    ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Use document-level event delegation for hover state to avoid multiple listeners
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target) ring.classList.add('hovered');
+  }, { passive: true });
+
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target) ring.classList.remove('hovered');
+  }, { passive: true });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');
@@ -107,6 +136,10 @@
       if (!products || !products.length) return;
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
+
+      // Use DocumentFragment to batch DOM updates and prevent layout thrashing
+      const fragment = document.createDocumentFragment();
+
       products.forEach((p, i) => {
         const img = p.images?.[0]?.src || '';
         // Mock prices from API are likely in dollars, convert to cents for consistency
@@ -126,8 +159,9 @@
           <button class="product-add-btn" onclick="addToCart({id:'${variantId}',variantId:'${variantId}',name:'${p.title.replace(/'/g,"\\'")}',price:${priceInCents},emoji:'🛍️'})" aria-label="Add to cart">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#0e0e0e" stroke-width="2" stroke-linecap="round"/></svg>
           </button>`;
-        grid.appendChild(card);
+        fragment.appendChild(card);
         observer.observe(card);
       });
+      grid.appendChild(fragment);
     });
   }

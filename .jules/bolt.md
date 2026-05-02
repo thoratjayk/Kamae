@@ -1,0 +1,3 @@
+## 2025-05-23 - [Cursor Animation & Event Delegation]
+**Learning:** High-frequency event listeners (mousemove) and split animation logic (mix of direct DOM updates and rAF) cause layout thrashing and redundant calculations. Using a single consolidated rAF loop with `translate3d` and `will-change` provides a much smoother 60fps experience. Additionally, individual event listeners on interactive elements are memory-intensive and fail for dynamically loaded content.
+**Action:** Always consolidate DOM updates for animated elements into a single rAF loop and use document-level event delegation for hover states on interactive elements to ensure performance and compatibility with dynamic UI updates.

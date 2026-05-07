@@ -1,0 +1,3 @@
+## 2025-05-14 - Optimized Custom Cursor with GPU Acceleration and Event Delegation
+**Learning:** Consolidating multiple DOM updates into a single `requestAnimationFrame` loop and using `translate3d` significantly reduces layout thrashing and leverages GPU acceleration for smoother animations. Additionally, event delegation for hover states on interactive elements is more efficient and handles dynamically added content (like products from the Shopify API) without needing to re-attach listeners.
+**Action:** Always prefer `translate3d` for high-frequency position updates and use a single rAF loop for multiple related animations. Use document-level event delegation for UI states that depend on interactive elements.

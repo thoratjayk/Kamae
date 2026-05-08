@@ -1,0 +1,3 @@
+## 2025-05-14 - [Cursor Performance & Event Delegation]
+**Learning:** Consolidating high-frequency DOM updates into a single `requestAnimationFrame` loop and using `translate3d` significantly reduces layout thrashing and leverages GPU acceleration. Additionally, document-level event delegation is more efficient than individual listeners but requires explicitly ignoring cursor elements (`#cursorDot`, `#cursorRing`) to prevent them from interfering with `mouseover`/`mouseout` detection on underlying interactive elements.
+**Action:** Always batch animation updates in rAF, use 3D transforms for animated elements, and use event delegation for global UI behaviors while ensuring pointer-events or ID checks prevent recursive event triggers.

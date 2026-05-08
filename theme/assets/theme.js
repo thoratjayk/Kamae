@@ -1,11 +1,46 @@
+(function() {
   /* ── CURSOR ── */
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+
+  // Optimized cursor: use passive listener and consolidate updates in rAF
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+
+    // Use translate3d for GPU acceleration and batch updates to avoid layout thrashing
+    if (dot) dot.style.transform = `translate3d(calc(${mx}px - 50%), calc(${my}px - 50%), 0)`;
+    if (ring) ring.style.transform = `translate3d(calc(${rx}px - 50%), calc(${ry}px - 50%), 0)`;
+
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Efficient event delegation for hover states
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target) {
+      ring?.classList.add('hovered');
+    } else if (e.target.id === 'cursorDot' || e.target.id === 'cursorRing') {
+      // Ignore cursor elements themselves to prevent them from interfering with hover detection
+      return;
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target) {
+      // Check if we are moving to a child of the same interactive element
+      if (!e.relatedTarget || (!target.contains(e.relatedTarget) && e.relatedTarget.id !== 'cursorDot' && e.relatedTarget.id !== 'cursorRing')) {
+        ring?.classList.remove('hovered');
+      }
+    }
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');
@@ -131,3 +166,4 @@
       });
     });
   }
+})();

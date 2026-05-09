@@ -1,0 +1,3 @@
+## 2025-05-14 - [Cursor Animation & Event Delegation]
+**Learning:** Consolidating DOM updates for high-frequency animations (like custom cursors) into a single `requestAnimationFrame` loop using `translate3d` significantly reduces layout thrashing and main-thread blocking. When using document-level event delegation for hover states (`mouseover`), the custom cursor elements themselves can trigger events, interfering with detection.
+**Action:** Always consolidate related animations into a single rAF loop. In event delegation for custom cursors, explicitly ignore the cursor elements as targets or relatedTargets to ensure stable hover state detection.

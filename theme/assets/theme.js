@@ -2,10 +2,47 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let lastMx = -1, lastMy = -1, lastRx = -1, lastRy = -1;
+
+  // Optimized mousemove listener: only updates coordinates
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+  /**
+   * Consolidated animation loop for custom cursor.
+   * Uses translate3d for GPU acceleration and a dirty-check to avoid redundant DOM updates.
+   */
+  function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+
+    const movedDot = Math.abs(mx - lastMx) > 0.1 || Math.abs(my - lastMy) > 0.1;
+    const movedRing = Math.abs(rx - lastRx) > 0.1 || Math.abs(ry - lastRy) > 0.1;
+
+    if (movedDot) {
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+      lastMx = mx; lastMy = my;
+    }
+    if (movedRing) {
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+      lastRx = rx; lastRy = ry;
+    }
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Document-level event delegation for cursor hover states (supports dynamic elements)
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) {
+      ring.classList.add('hovered');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) {
+      ring.classList.remove('hovered');
+    }
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

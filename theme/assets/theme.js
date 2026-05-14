@@ -2,10 +2,48 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let dx = 0, dy = 0; // Current dot positions
+
+  // Passive listener for better scroll/touch performance
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  function animateCursor() {
+    // Easing for ring
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+
+    // Smooth follow for dot (slight easing for fluid feel)
+    dx += (mx - dx) * 0.45;
+    dy += (my - dy) * 0.45;
+
+    // "Dirty check" to avoid redundant DOM updates if movement is sub-pixel
+    if (Math.abs(mx - rx) > 0.1 || Math.abs(my - ry) > 0.1 || Math.abs(mx - dx) > 0.1 || Math.abs(my - dy) > 0.1) {
+      dot.style.transform = `translate3d(calc(${dx}px - 50%), calc(${dy}px - 50%), 0)`;
+      ring.style.transform = `translate3d(calc(${rx}px - 50%), calc(${ry}px - 50%), 0)`;
+    }
+
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Event delegation for cursor hover states (more efficient, supports dynamic content)
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, [onclick], .product-add-btn');
+    if (target) ring.classList.add('hovered');
+  }, { passive: true });
+
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, [onclick], .product-add-btn');
+    if (target) {
+      // Check if we are moving to a child of the same interactive element
+      if (!e.relatedTarget || !target.contains(e.relatedTarget)) {
+        ring.classList.remove('hovered');
+      }
+    }
+  }, { passive: true });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');
@@ -32,9 +70,10 @@
     const itemsEl = document.getElementById('cartItems');
     if (cart.length === 0) { emptyEl.style.display = 'flex'; footerEl.style.display = 'none'; return; }
     emptyEl.style.display = 'none'; footerEl.style.display = 'block';
-    // render items
+    // render items (batching DOM updates with DocumentFragment)
     const existing = itemsEl.querySelectorAll('.cart-item');
     existing.forEach(el => el.remove());
+    const fragment = document.createDocumentFragment();
     cart.forEach((item, idx) => {
       const el = document.createElement('div');
       el.className = 'cart-item';
@@ -49,8 +88,9 @@
             <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
           </div>
         </div>`;
-      itemsEl.insertBefore(el, emptyEl);
+      fragment.appendChild(el);
     });
+    itemsEl.insertBefore(fragment, emptyEl);
   }
   function addToCart(product) {
     if (typeof window.shopifyAddToCart === 'function') {
@@ -107,6 +147,7 @@
       if (!products || !products.length) return;
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
+      const fragment = document.createDocumentFragment();
       products.forEach((p, i) => {
         const img = p.images?.[0]?.src || '';
         // Mock prices from API are likely in dollars, convert to cents for consistency
@@ -126,8 +167,9 @@
           <button class="product-add-btn" onclick="addToCart({id:'${variantId}',variantId:'${variantId}',name:'${p.title.replace(/'/g,"\\'")}',price:${priceInCents},emoji:'🛍️'})" aria-label="Add to cart">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#0e0e0e" stroke-width="2" stroke-linecap="round"/></svg>
           </button>`;
-        grid.appendChild(card);
+        fragment.appendChild(card);
         observer.observe(card);
       });
+      grid.appendChild(fragment);
     });
   }

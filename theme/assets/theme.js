@@ -2,10 +2,53 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  // Track last positions to avoid redundant DOM updates (dirty check)
+  let lastDx = -1, lastDy = -1, lastRx = -1, lastRy = -1;
+
+  // Use passive: true to avoid blocking the main thread
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+  function animateCursor() {
+    // Ring smoothing
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+
+    // Use a small threshold (0.1px) to determine if we should update the DOM
+    // This prevents style recalculations when the mouse is stationary
+    const dotMoved = Math.abs(mx - lastDx) > 0.1 || Math.abs(my - lastDy) > 0.1;
+    const ringMoved = Math.abs(rx - lastRx) > 0.1 || Math.abs(ry - lastRy) > 0.1;
+
+    if (dotMoved) {
+      // Use translate3d for hardware acceleration and move dot update to rAF loop
+      dot.style.transform = `translate3d(calc(${mx}px - 50%), calc(${my}px - 50%), 0)`;
+      lastDx = mx;
+      lastDy = my;
+    }
+
+    if (ringMoved) {
+      // Use translate3d for hardware acceleration
+      ring.style.transform = `translate3d(calc(${rx}px - 50%), calc(${ry}px - 50%), 0)`;
+      lastRx = rx;
+      lastRy = ry;
+    }
+
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Use event delegation for better performance and to support dynamically loaded products
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) {
+      ring.classList.add('hovered');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) {
+      ring.classList.remove('hovered');
+    }
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

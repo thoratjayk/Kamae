@@ -1,0 +1,3 @@
+## 2025-05-15 - Redundant Cursor Style Updates & Event Delegation
+**Learning:** High-frequency animation loops (rAF) that update the DOM without 'dirty checking' cause unnecessary layout/paint work even when the mouse is stationary. Additionally, individual event listeners on elements like product cards fail when those elements are dynamically re-rendered (e.g., via shopifyLoadProducts).
+**Action:** Always implement a coordinate threshold (e.g., 0.1px) in rAF loops to skip redundant DOM updates. Use document-level event delegation for interactive UI states to ensure persistence across dynamic DOM updates and reduce memory overhead.

@@ -1,11 +1,30 @@
   /* ── CURSOR ── */
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let mx = 0, my = 0, dx = 0, dy = 0, rx = 0, ry = 0;
+  // Use passive listener for better scroll/touch performance and only store coordinates
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  function animateCursor() {
+    // Smooth easing for dot and ring
+    dx += (mx - dx) * 0.25; dy += (my - dy) * 0.25;
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    // Dirty check: Only update DOM if movement > 0.1px to save CPU cycles
+    if (Math.abs(mx - dx) > 0.1 || Math.abs(my - dy) > 0.1 || Math.abs(mx - rx) > 0.1 || Math.abs(my - ry) > 0.1) {
+      dot.style.transform = `translate3d(calc(${dx}px - 50%), calc(${dy}px - 50%), 0)`;
+      ring.style.transform = `translate3d(calc(${rx}px - 50%), calc(${ry}px - 50%), 0)`;
+    }
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+  // Using event delegation for better performance and support for dynamic elements
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) ring.classList.add('hovered');
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) ring.classList.remove('hovered');
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

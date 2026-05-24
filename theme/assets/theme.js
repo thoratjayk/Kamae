@@ -2,10 +2,48 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let lastDotX = 0, lastDotY = 0, lastRingX = 0, lastRingY = 0;
+
+  // Optimized mousemove: only update coordinates, mark passive for scroll performance
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  // Consolidated animation loop with dirty checks and hardware acceleration
+  function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+
+    // Update dot if moved > 0.1px (Dirty check)
+    if (Math.abs(mx - lastDotX) > 0.1 || Math.abs(my - lastDotY) > 0.1) {
+      lastDotX = mx; lastDotY = my;
+      dot.style.transform = `translate3d(calc(${mx}px - 50%), calc(${my}px - 50%), 0)`;
+    }
+
+    // Update ring if moved > 0.1px (Dirty check)
+    if (Math.abs(rx - lastRingX) > 0.1 || Math.abs(ry - lastRingY) > 0.1) {
+      lastRingX = rx; lastRingY = ry;
+      ring.style.transform = `translate3d(calc(${rx}px - 50%), calc(${ry}px - 50%), 0)`;
+    }
+
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Efficient event delegation for hover states
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, [onclick], .product-add-btn');
+    if (target) {
+      ring.classList.add('hovered');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, [onclick], .product-add-btn');
+    if (target) {
+      ring.classList.remove('hovered');
+    }
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

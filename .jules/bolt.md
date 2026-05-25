@@ -1,0 +1,3 @@
+## 2025-05-14 - Consolidating Animation Loops
+**Learning:** High-frequency events like `mousemove` should never trigger direct DOM writes. Consolidating all cursor-related updates into a single `requestAnimationFrame` loop and implementing a "dirty-check" threshold (e.g., 0.1px) significantly reduces layout thrashing and CPU usage. Additionally, CSS `transition: transform` must be removed when controlling transforms via JS to prevent interpolation conflicts.
+**Action:** Always use a single rAF loop for multiple synchronized animated elements and ensure CSS transitions don't fight with JS-driven transforms.

@@ -1,0 +1,3 @@
+## 2025-05-15 - Consolidated rAF and Event Delegation for Cursor
+**Learning:** Combining multiple DOM updates (cursor dot and ring) into a single `requestAnimationFrame` loop reduces layout thrashing. Adding a "dirty check" (threshold) further optimizes by skipping updates when the mouse is stationary. Using event delegation on `document` for hover states is more efficient than attaching listeners to individual elements, especially when content is dynamic (like products loaded from an API).
+**Action:** Always prefer consolidated rAF loops for animated elements and event delegation for high-frequency or dynamic interactions.

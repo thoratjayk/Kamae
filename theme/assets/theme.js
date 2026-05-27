@@ -2,10 +2,31 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let lmx = -1, lmy = -1, lrx = -1, lry = -1;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  function animateCursor() {
+    // Dot: immediate follow with dirty check
+    if (Math.abs(mx - lmx) > 0.1 || Math.abs(my - lmy) > 0.1) {
+      dot.style.transform = `translate3d(calc(${mx}px - 50%), calc(${my}px - 50%), 0)`;
+      lmx = mx; lmy = my;
+    }
+    // Ring: smoothed follow with dirty check
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    if (Math.abs(rx - lrx) > 0.1 || Math.abs(ry - lry) > 0.1) {
+      ring.style.transform = `translate3d(calc(${rx}px - 50%), calc(${ry}px - 50%), 0)`;
+      lrx = rx; lry = ry;
+    }
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) ring.classList.add('hovered');
+  });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) ring.classList.remove('hovered');
+  });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

@@ -1,0 +1,3 @@
+## 2026-05-30 - Consolidating Animation Loops & Hardware Acceleration
+**Learning:** High-frequency UI animations (like custom cursors) should consolidate all DOM updates into a single `requestAnimationFrame` loop. Using `translate3d` ensures GPU acceleration, but it is critical to remove any CSS `transition: transform` on those elements, as they will conflict with the JavaScript loop and cause visual jitter ("jank"). Additionally, a small "dirty-check" threshold (e.g., 0.1px) prevents redundant style updates when the mouse is stationary.
+**Action:** Always check for and remove conflicting CSS transitions when moving to an rAF-based animation system, and implement a threshold to skip unnecessary DOM writes.

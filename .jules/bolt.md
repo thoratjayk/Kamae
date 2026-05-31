@@ -1,0 +1,3 @@
+## 2025-05-14 - Optimized Cursor Animation and Event Delegation
+**Learning:** Consolidating DOM updates for animated elements (like a custom cursor) into a single `requestAnimationFrame` loop and using a "dirty check" threshold (e.g., 0.1px) significantly reduces redundant style calculations and browser work when the mouse is stationary. Using `translate3d` ensures GPU acceleration, and document-level event delegation handles dynamically loaded content (like product grids) without additional listeners.
+**Action:** Always prefer a single rAF loop for multiple related UI animations and use event delegation for interactive element states that may be dynamic.

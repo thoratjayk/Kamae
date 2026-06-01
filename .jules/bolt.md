@@ -1,0 +1,3 @@
+## 2025-05-14 - Optimized Cursor Animation and Event Delegation
+**Learning:** Consolidating DOM updates for animated elements into a single `requestAnimationFrame` loop and using `translate3d` significantly reduces layout thrashing and main-thread workload. Implementing a "dirty check" with a small threshold (e.g., 0.1px) further optimizes performance by skipping redundant style updates when the mouse is stationary or moving minimally.
+**Action:** Always prefer `requestAnimationFrame` for UI animations driven by high-frequency events like `mousemove`. Use `translate3d` for hardware acceleration and implement dirty checks to minimize DOM mutations.

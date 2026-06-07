@@ -1,0 +1,3 @@
+## 2025-05-15 - Consolidate Animation Loops and Use Event Delegation
+**Learning:** High-frequency UI interactions like custom cursors should consolidate all DOM updates into a single `requestAnimationFrame` loop and use `translate3d` for hardware acceleration. Additionally, using event delegation for hover states instead of individual listeners significantly reduces memory overhead and ensures compatibility with dynamically loaded content (like products from an API).
+**Action:** Always prefer a single rAF loop for multiple related animated elements and use document-level event delegation for hover effects on interactive elements.

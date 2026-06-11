@@ -1,11 +1,50 @@
   /* ── CURSOR ── */
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let mx = 0, my = 0; // Mouse targets
+  let dx = 0, dy = 0; // Dot positions
+  let rx = 0, ry = 0; // Ring positions
+  let ldx = 0, ldy = 0, lrx = 0, lry = 0; // Last positions for dirty checking
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  function animateCursor() {
+    // Smoother dot trailing
+    dx += (mx - dx) * 0.35;
+    dy += (my - dy) * 0.35;
+    // Ring trailing
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+
+    // Dirty check for performance: skip style updates if change is sub-pixel (0.1px threshold)
+    const dotDirty = Math.abs(dx - ldx) > 0.1 || Math.abs(dy - ldy) > 0.1;
+    const ringDirty = Math.abs(rx - lrx) > 0.1 || Math.abs(ry - lry) > 0.1;
+
+    if (dotDirty) {
+      dot.style.transform = `translate3d(calc(-50% + ${dx}px), calc(-50% + ${dy}px), 0)`;
+      ldx = dx; ldy = dy;
+    }
+    if (ringDirty) {
+      ring.style.transform = `translate3d(calc(-50% + ${rx}px), calc(-50% + ${ry}px), 0)`;
+      lrx = rx; lry = ry;
+    }
+
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // Use event delegation for hover states - more efficient than individual listeners
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) ring.classList.add('hovered');
+  }, { passive: true });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) ring.classList.remove('hovered');
+  }, { passive: true });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

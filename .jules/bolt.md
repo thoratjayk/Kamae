@@ -1,0 +1,3 @@
+## 2025-05-14 - Optimized Custom Cursor Performance & Event Delegation
+**Learning:** High-frequency events like `mousemove` should only update coordinates, while DOM updates should be consolidated into a single `requestAnimationFrame` loop using `translate3d` and a "dirty check" (e.g., 0.1px threshold) to prevent redundant style updates when the mouse is stationary. Furthermore, document-level event delegation for cursor hover states ensures dynamic elements (like AJAX-loaded products) are correctly handled without expensive re-binding of listeners.
+**Action:** Always prefer a consolidated rAF loop with thresholds for JS-driven animations and use event delegation on `document` for global UI interactions like custom cursors.

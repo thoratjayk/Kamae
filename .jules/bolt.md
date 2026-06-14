@@ -1,0 +1,3 @@
+## 2024-05-23 - Custom Cursor Animation Consolidation
+**Learning:** High-frequency UI animations like custom cursors can cause layout thrashing if they use separate event listeners and rAF loops for different parts (dot and ring). CSS transitions on 'transform' also conflict with JS-driven transforms, causing 'jank'.
+**Action:** Consolidate all animated element updates into a single `requestAnimationFrame` loop. Use `translate3d` for GPU acceleration and implement a 'dirty-check' threshold (e.g., 0.1px) to bypass DOM updates when elements are essentially stationary. Use document-level event delegation for hover states to handle dynamic elements and reduce listener overhead.

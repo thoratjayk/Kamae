@@ -1,11 +1,43 @@
   /* ── CURSOR ── */
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`; });
-  function animateCursor() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`; requestAnimationFrame(animateCursor); }
+  let mx = 0, my = 0, dx = 0, dy = 0, rx = 0, ry = 0;
+  // Use passive listener for better scroll performance
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+  function animateCursor() {
+    // ⚡ Bolt Optimization: Consolidate updates and use dirty-checking to skip redundant DOM writes
+    const ddx = mx - dx;
+    const ddy = my - dy;
+    const drx = mx - rx;
+    const dry = my - ry;
+
+    // Only update if there's significant movement (0.1px threshold)
+    const moved = Math.abs(ddx) > 0.1 || Math.abs(ddy) > 0.1 || Math.abs(drx) > 0.1 || Math.abs(dry) > 0.1;
+
+    if (moved) {
+      dx += ddx * 0.35;
+      dy += ddy * 0.35;
+      rx += drx * 0.12;
+      ry += dry * 0.12;
+
+      // Use translate3d for GPU acceleration
+      dot.style.transform = `translate3d(calc(-50% + ${dx}px), calc(-50% + ${dy}px), 0)`;
+      ring.style.transform = `translate3d(calc(-50% + ${rx}px), calc(-50% + ${ry}px), 0)`;
+    }
+    requestAnimationFrame(animateCursor);
+  }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hovered')); el.addEventListener('mouseleave', () => ring.classList.remove('hovered')); });
+
+  // ⚡ Bolt Optimization: Use event delegation for better performance and dynamic element support
+  document.addEventListener('mouseover', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) ring.classList.add('hovered');
+  }, { passive: true });
+  document.addEventListener('mouseout', e => {
+    const target = e.target.closest('a, button, .product-add-btn, [onclick]');
+    if (target && !target.contains(e.relatedTarget)) ring.classList.remove('hovered');
+  }, { passive: true });
 
   /* ── NAV SCROLL ── */
   const nav = document.getElementById('mainNav');

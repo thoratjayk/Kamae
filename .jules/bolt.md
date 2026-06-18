@@ -1,0 +1,3 @@
+## 2026-06-18 - Optimized Custom Cursor Animation and Event Delegation
+**Learning:** High-frequency animations like custom cursors can cause significant main-thread overhead if they update the DOM every frame, especially when stationary. Event listeners on hundreds of individual elements (like product buttons) increase memory usage and don't support dynamic content.
+**Action:** Consolidate multiple animated elements into a single `requestAnimationFrame` loop. Use a "dirty-check" threshold (e.g., 0.1px) to skip DOM updates when the change is negligible. Implement document-level event delegation for hover states to handle dynamic elements and reduce listener count.

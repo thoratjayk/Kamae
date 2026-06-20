@@ -1,0 +1,3 @@
+## 2026-06-20 - Cursor Animation Consolidation & Dirty Checking
+**Learning:** High-frequency cursor animations driven by separate event listeners and multiple requestAnimationFrame loops can cause layout thrashing. Furthermore, keeping 'transition: transform' on elements updated via JS animation loops creates rendering conflicts. A 0.1px "dirty check" threshold effectively stops all DOM style updates once interpolation settles, saving significant main-thread work when the user is idle.
+**Action:** Consolidate UI animations into single rAF loops, use translate3d, and implement dirty-checking thresholds for interpolated values to prevent redundant style writes.

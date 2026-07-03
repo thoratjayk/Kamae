@@ -51,13 +51,14 @@
       position: fixed; top: 0; left: 0; z-index: 9999;
       pointer-events: none;
       mix-blend-mode: difference;
+      will-change: transform;
     }
     .cursor-dot {
       width: 8px; height: 8px;
       background: var(--primary);
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      transition: transform 0.1s;
+      /* transition: transform removed to avoid conflicts with JS animation loop */
     }
     .cursor-ring {
       position: fixed; top: 0; left: 0; z-index: 9998;
@@ -66,8 +67,10 @@
       border-radius: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      transition: transform 0.18s ease, width 0.3s, height 0.3s, border-color 0.3s;
+      /* transition: transform removed to avoid conflicts with JS animation loop */
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
       mix-blend-mode: difference;
+      will-change: transform;
     }
     .cursor-ring.hovered {
       width: 56px; height: 56px;

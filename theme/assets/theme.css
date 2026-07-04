@@ -51,22 +51,26 @@
       position: fixed; top: 0; left: 0; z-index: 9999;
       pointer-events: none;
       mix-blend-mode: difference;
+      /* Optimization: Hardware acceleration for smooth movement */
+      will-change: transform;
+      transform: translate3d(-50%, -50%, 0);
     }
     .cursor-dot {
       width: 8px; height: 8px;
       background: var(--primary);
       border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s;
+      /* Removed transition on transform to avoid conflict with JS animation */
     }
     .cursor-ring {
       position: fixed; top: 0; left: 0; z-index: 9998;
       width: 36px; height: 36px;
       border: 1.5px solid var(--primary);
       border-radius: 50%;
-      transform: translate(-50%, -50%);
       pointer-events: none;
-      transition: transform 0.18s ease, width 0.3s, height 0.3s, border-color 0.3s;
+      /* Optimization: Hardware acceleration and removed transform from transition */
+      will-change: transform;
+      transform: translate3d(-50%, -50%, 0);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
       mix-blend-mode: difference;
     }
     .cursor-ring.hovered {

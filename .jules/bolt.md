@@ -1,0 +1,3 @@
+## 2026-07-04 - Custom Cursor Redundant DOM Updates
+**Learning:** The custom cursor implementation was performing ~60 DOM style updates per second even when the mouse was stationary, due to the requestAnimationFrame loop running continuously without state checks. Additionally, conflicting CSS transitions on the transform property caused rendering jank.
+**Action:** Implement 0.1px "dirty checking" in the animation loop to skip DOM updates when position changes are negligible. Remove CSS transitions on properties driven by JavaScript to eliminate frame-rate conflicts and use translate3d for GPU acceleration.

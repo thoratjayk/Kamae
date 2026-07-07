@@ -1,0 +1,3 @@
+## 2025-05-14 - Custom Cursor Optimization & Event Delegation
+**Learning:** High-frequency UI animations (like custom cursors) often cause redundant DOM writes even when stationary, wasting CPU/GPU cycles. Additionally, attaching event listeners to individual elements at load time fails for dynamically injected content (e.g., product grids).
+**Action:** Always implement a "dirty-check" threshold (e.g., 0.1px) in `requestAnimationFrame` loops to skip unnecessary style updates. Use document-level event delegation for hover states to ensure consistent behavior across static and dynamic elements while reducing memory overhead.
